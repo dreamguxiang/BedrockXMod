@@ -109,13 +109,11 @@ void loadconf() {
 	}
 }
 
-class FullName
-{
-	std::string getFullName(Block* blk) const {
-		__int64 tmp_bs = (blk + 2);
-		return  *(string*)(bs + 128);
-	}
-};
+
+const struct HashedString* getFullName(Block* block) {
+	return (const struct HashedString*)(block + 120);
+}
+
 
 Block& Str2Block(string str) {
 	string bstr = "?m" + str + "@VanillaBlocks@@3PEBVBlock@@EB";
@@ -128,8 +126,7 @@ THook(bool, "?solidify@LiquidBlock@@IEBA_NAEAVBlockSource@@AEBVBlockPos@@1@Z", v
 	bool vaule = original(_this, bs, bpos1, bpos2);
 	if (vaule) {
 		Block* pBlk = SymCall("?getBlock@BlockSource@@QEBAAEBVBlock@@AEBVBlockPos@@@Z", Block*, BlockSource*, BlockPos*)(bs, bpos1);
-
-		SymCall("?getFullName@Block@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ", void, Block*, string*)(pBlk, &blname);
+		blname  = getFullName(pBlk);
 		//cout << bname << endl;
 		if (blname == "minecraft:cobblestone") {
 			random_device rd;

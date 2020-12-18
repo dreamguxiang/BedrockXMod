@@ -26,5 +26,5 @@ THook(void, "?explode@Level@@QEAAXAEAVBlockSource@@PEAVActor@@AEBVVec3@@M_N3M3@Z
     else if (actname == "Wither") {
         a5 = 0;
     }
-    return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);
+    return original(_this, a2, a3, a4, a5, a6, 0, a8, a9);
 }
