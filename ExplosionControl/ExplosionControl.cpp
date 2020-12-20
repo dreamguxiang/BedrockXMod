@@ -82,7 +82,6 @@ THook(void, "?explode@Level@@QEAAXAEAVBlockSource@@PEAVActor@@AEBVVec3@@M_N3M3@Z
 			a7 = config[config[a].GetString()]["destroy"].GetBool();
 			a8 = config[config[a].GetString()]["MaximumExplosionResistance"].GetFloat();
 			a9 = config[config[a].GetString()]["unknown"].GetBool();
-			std::cout << actname << endl;
 			return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);
 		}
 	return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);

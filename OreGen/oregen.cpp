@@ -24,6 +24,7 @@
 #include <mcapi/VanillaBlocks.h>
 #include <random>
 #include <windows.h>
+#include "heard.h"
 using namespace std;
 #pragma warning(disable:4996)
 //煤炭
@@ -110,11 +111,6 @@ void loadconf() {
 }
 
 
-const struct HashedString* getFullName(Block* block) {
-	return (const struct HashedString*)(block + 120);
-}
-
-
 Block& Str2Block(string str) {
 	string bstr = "?m" + str + "@VanillaBlocks@@3PEBVBlock@@EB";
 	return **(Block**)dlsym_real(bstr.c_str());
@@ -122,13 +118,12 @@ Block& Str2Block(string str) {
 
 #define setBlockSym "?setBlock@BlockSource@@QEAA_NAEBVBlockPos@@AEBVBlock@@HPEBUActorBlockSyncMessage@@@Z"
 THook(bool, "?solidify@LiquidBlock@@IEBA_NAEAVBlockSource@@AEBVBlockPos@@1@Z", void* _this, BlockSource* bs, BlockPos* bpos1, BlockPos* bpos2) {
-	string blname = "";
 	bool vaule = original(_this, bs, bpos1, bpos2);
 	if (vaule) {
-		Block* pBlk = SymCall("?getBlock@BlockSource@@QEBAAEBVBlock@@AEBVBlockPos@@@Z", Block*, BlockSource*, BlockPos*)(bs, bpos1);
-		blname  = getFullName(pBlk);
-		//cout << bname << endl;
-		if (blname == "minecraft:cobblestone") {
+		Block* pBlk = SymBlockSource::getBlock(bs, bpos1);
+		BlockLegacy* bl = SymCall("?getLegacyBlock@Block@@QEBAAEBVBlockLegacy@@XZ", BlockLegacy*, Block*)(pBlk);
+		auto bname = *(std::string*)((__int64)bl + 128);
+		if (bname == "minecraft:cobblestone") {
 			random_device rd;
 			rand_num = (rd() + atoi(gettimenum().c_str())) % total;
 			//cout << "rand_num [" << rand_num << "]" << endl;
@@ -146,5 +141,5 @@ THook(bool, "?solidify@LiquidBlock@@IEBA_NAEAVBlockSource@@AEBVBlockPos@@1@Z", v
 void oregen_entry() {
 	rand_num = atoi(gettimenum().c_str());
 	loadconf();
-	cout << "[OreGen] OreGen Loaded, By WangYneos, Build Date [" << __TIMESTAMP__ << u8"] @Losenone丨洛书南 定制版" << endl;
+	cout << "[OreGen] OreGen Loaded, By WangYneos, Build Date [" << __TIMESTAMP__ << u8"] @Losenone丨洛书南 定制版 " << endl;
 }
