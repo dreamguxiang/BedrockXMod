@@ -58,12 +58,10 @@ THook(bool, "?useItem@GameMode@@UEAA_NAEAVItemStack@@@Z",
 	auto sp = *reinterpret_cast<Player**>(reinterpret_cast<unsigned long long>(_this) + 8);
 	if (config["kg"].GetBool() == true) {
 		auto mstr = item.getId();
-		if (mstr != 0) {
 			auto mstr1 = item.getId();
-			auto mstr2 = item.toString();
+			string mstr2 = "";
+			SymCall("?getSerializedName@Item@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ", void, Item const*, string*)(item.getItem(), &mstr2);
 			std::cout << u8"[Id-Test]使用触发者:" << sp->getNameTag() << u8"|物品名称:" << mstr2 << u8"|物品id:" << mstr1 << endl;
-			return false;
-		}
 	}
 	bool vaule = original(_this, item);
 }
@@ -72,8 +70,10 @@ THook(bool, "?attack@GameMode@@UEAA_NAEAVActor@@@Z", void* _this, Actor* ac) {
 	if (ac) {
 		string name;
 		auto sp = *reinterpret_cast<Player**>(reinterpret_cast<unsigned long long>(_this) + 8);
-		name = SymCall("?EntityTypeToString@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4ActorType@@W4ActorTypeNamespaceRules@@@Z", string, int, int)(ac->getEntityTypeId(), 1);
-		std::cout << u8"[Id-Test]使用触发者:" << sp->getNameTag() << u8"|生物名称:" << name << u8"|生物id:" << ac->getEntityTypeId() << endl;
+		if (config["kg"].GetBool() == true) {
+			name = SymCall("?EntityTypeToString@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4ActorType@@W4ActorTypeNamespaceRules@@@Z", string, int, int)(ac->getEntityTypeId(), 1);
+			std::cout << u8"[Id-Test]使用触发者:" << sp->getNameTag() << u8"|生物名称:" << name << u8"|生物id:" << ac->getEntityTypeId() << endl;
+		}
 	}
 	return original(_this, ac);
 }
