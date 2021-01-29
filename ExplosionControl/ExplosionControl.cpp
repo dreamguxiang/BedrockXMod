@@ -1,12 +1,8 @@
-#include <io.h>
-#include <fstream>
-#include "pch.h"
-#include <rapidjson/document.h>
 #include <lbpch.h>
 #include <iostream>
-#include <stdio.h>
-#include <fcntl.h>
-#include <sstream>
+
+#include "pch.h"
+#include <api\command\commands.h>
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
 int _access(const char
@@ -63,10 +59,6 @@ void loadconfig() {
 	if (size == 0)
 		cout << "[" << gettime() << u8" Error] No Member Found!!!" << endl;
 }
-void entry() {
-	loadconfig();
-	std::cout << "[" << gettime() << u8" ExplosionControl] Loaded!\n";
-}
 
 using namespace std;
 THook(void, "?explode@Level@@QEAAXAEAVBlockSource@@PEAVActor@@AEBVVec3@@M_N3M3@Z",
@@ -75,14 +67,49 @@ THook(void, "?explode@Level@@QEAAXAEAVBlockSource@@PEAVActor@@AEBVVec3@@M_N3M3@Z
 	string actname = "";
 	if (a3)
 		actname = SymCall("?getActorName@CommandUtils@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVActor@@@Z", string, Actor*)(a3);
-	for (size_t a = 0; a < config.Size(); a++)
-		if (config[a].GetString() == actname) {
-			a5 = config[config[a].GetString()]["explosionlevel"].GetFloat();
-			a6 = config[config[a].GetString()]["onfire"].GetBool();
-			a7 = config[config[a].GetString()]["destroy"].GetBool();
-			a8 = config[config[a].GetString()]["MaximumExplosionResistance"].GetFloat();
-			a9 = config[config[a].GetString()]["unknown"].GetBool();
+	    for (auto& m : config.GetObject())
+		  if (m.name.GetString() == actname) {
+			a5 = config[m.name.GetString()]["explosionlevel"].GetFloat();
+			a6 = config[m.name.GetString()]["onfire"].GetBool();
+			a7 = config[m.name.GetString()]["destroy"].GetBool();
+			a8 = config[m.name.GetString()]["MaximumExplosionResistance"].GetFloat();
+			a9 = config[m.name.GetString()]["unknown"].GetBool();
 			return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);
 		}
 	return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);
+}
+
+#pragma region CMDENUM
+enum class expccmd :int {
+	reload = 1
+};
+#pragma endregion 
+
+
+#pragma region cmd
+bool reconfig(CommandOrigin const& ori, CommandOutput& outp, MyEnum<expccmd> op) {
+	switch (op)
+	{
+	case expccmd::reload: {
+		std::cout << "[ExplosionControl] reload success" << endl;
+		outp.addMessage("[ExplosionControl] reload success");
+		loadconfig();
+		break;
+	}
+	}
+}
+
+bool oncmd_expc(CommandOrigin const& ori, CommandOutput& outp, MyEnum<expccmd> op) {
+	return reconfig(ori, outp, op);
+}
+#pragma endregion
+
+void entry() {
+	loadconfig();
+	addListener([](RegisterCommandEvent&) {
+		CEnum<expccmd> _1("expccmd", { "reload" });
+		MakeCommand("expc", "ExplosionControl menu", 1);
+		CmdOverload(expc, oncmd_expc, "op");
+		});
+	cout << "[ExplosionControl] ExplosionControl Loaded, By DreamGuXiang, Build Date [" << __TIMESTAMP__ << u8"] @FineServerحiFine " << endl;
 }

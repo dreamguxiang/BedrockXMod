@@ -117,8 +117,7 @@ THook(void, "?die@Mob@@UEAAXAEBVActorDamageSource@@@Z", Mob* _this, ActorDamageS
 					}
 					else
 					{
-						BDX::runcmdEx("title @a subtitle §6获得§e" + std::to_string(num1) + config["coinname"].GetString());
-						BDX::runcmdEx("title @a title §6成功击杀 §c" + zhname);
+						BDX::runcmdEx("title @a title §6玩家§b " + spl->getNameTag() +" §6成功击杀 §c" + zhname + " §6获得§e" + std::to_string(num1) + config["coinname"].GetString());
 						pl.sendText(u8"§6成功击杀§d " + zhname + u8" §6获得了§e" + std::to_string(num1)  + config["coinname"].GetString() + u8" §6当前余额:§b" + std::to_string(money + num1) + config["coinname"].GetString(), TIP);
 					}
 				}
