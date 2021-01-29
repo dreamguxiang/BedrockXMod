@@ -83,7 +83,7 @@ bool onCMDSl(CommandOrigin const& ori, CommandOutput& outp, MyEnum<slcmd> op, st
 		auto item = sp->getSelectedItem();
 		auto itemname = item.getName();
 		item.setCustomLore(v2);
-		sp->SymCall("?forceBalanceTransaction@InventoryTransactionManager@@QEAAXXZ",void*);
+		//sp->SymCall("?forceBalanceTransaction@InventoryTransactionManager@@QEAAXXZ",void*);
 		outp.addMessage(u8"³É¹¦");
 		break;
 	}

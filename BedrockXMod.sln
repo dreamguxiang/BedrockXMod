@@ -27,7 +27,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BDXHunter", "BDXHunter\BDXH
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bdxws", "bdxws\bdxws.vcxproj", "{3CDFB9BF-3BF6-47FD-B2E1-439E8EED5657}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quickshop", "quickshop\quickshop.vcxproj", "{1CCF5336-331E-4F1B-AA6C-00D250EC4181}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BDXTranScoreboard", "quickshop\quickshop.vcxproj", "{1CCF5336-331E-4F1B-AA6C-00D250EC4181}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ItemCheck", "ItemCheck\ItemCheck.vcxproj", "{1322DBE9-57C9-4835-BB0E-C5336B922869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,6 +142,14 @@ Global
 		{1CCF5336-331E-4F1B-AA6C-00D250EC4181}.Release|x64.Build.0 = Release|x64
 		{1CCF5336-331E-4F1B-AA6C-00D250EC4181}.Release|x86.ActiveCfg = Release|Win32
 		{1CCF5336-331E-4F1B-AA6C-00D250EC4181}.Release|x86.Build.0 = Release|Win32
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Debug|x64.ActiveCfg = Debug|x64
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Debug|x64.Build.0 = Debug|x64
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Debug|x86.ActiveCfg = Debug|Win32
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Debug|x86.Build.0 = Debug|Win32
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Release|x64.ActiveCfg = Release|x64
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Release|x64.Build.0 = Release|x64
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Release|x86.ActiveCfg = Release|Win32
+		{1322DBE9-57C9-4835-BB0E-C5336B922869}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

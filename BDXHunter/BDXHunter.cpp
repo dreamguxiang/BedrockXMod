@@ -1,5 +1,11 @@
 #include <lbpch.h>
 #include <iostream>
+#include <iostream>
+#include <lbpch.h>
+
+#include "pch.h"
+#include <bdxmoney.h>
+
 #include <api/Loader.h>
 #include <api/MC.h>
 #include <mcapi/Player.h>
@@ -24,10 +30,8 @@
 #include <functional>
 #include "Helper.h"
 #include "random"
-#include "pch.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
-#include "Helper.h"
 int _access(const char
 	* path, int mode);
 
@@ -86,10 +90,6 @@ void loadconfig() {
 	if (size == 0)
 		cout << "[" << gettime() << u8" Error] No Member Found!!!" << endl;
 }
-void entry() {
-	loadconfig();
-	std::cout << "[" << gettime() << u8" BDXHunter] Loaded!\n";
-}
 
 THook(void, "?die@Mob@@UEAAXAEBVActorDamageSource@@@Z", Mob* _this, ActorDamageSource* a2) {
 	    string Mob_name = _this->getNameTag();
@@ -99,56 +99,65 @@ THook(void, "?die@Mob@@UEAAXAEBVActorDamageSource@@@Z", Mob* _this, ActorDamageS
 		Actor* Src = LocateS<ServerLevel>()->fetchEntity(src_id, false);
 		int srccode = dAccess<int>(a2, 8);
 		string cause_n = SymActorDamageSource::lookupCauseName(srccode);
-		string src_name, mob_name, Src_type_name, Src_name;
-		if (Src) {
-			Src_name = Src->getNameTag();
-			Src_type_name = SymCommandUtils::getActorName(Src);
-			if (!Mob_type_name.empty()) {
-				if (Mob_name == Mob_type_name) {
-					mob_name = Mob_name;
-				}
-				else {
-					mob_name = Mob_name;
-				}
-			}
-			if (!Src_type_name.empty()) {
-				if (!Src_name.empty())
-					src_name = Src_name;
-				else
-					src_name = Src_type_name;
-			}
-			else {
-				src_name = "unknow";
-			}
-		}
-		else {
-			if (!Mob_type_name.empty()) {
-				if (Mob_name == Mob_type_name) {
-					mob_name = Mob_name;
-					
-				}
-				else {
-					mob_name = Mob_type_name;
-				}
-			}
-			src_name = "unknow";
-				}
 		if (srccode == 2 || srccode == 3) {
 			Player* spl = _this->getLastHurtByPlayer();
 			auto pl = WPlayer(*(ServerPlayer*)spl);
-			for (size_t a = 0; a < config.Size(); a++) {
-				if (config[a].GetString() == Mob_name2)
+			for (auto& m : config.GetObject())
+				if(m.name.GetString() == Mob_name2)
 				{
 					long money = Money::getMoney(pl.getXuid());
-					int max = config[config[a].GetString()]["max"].GetInt();
-					int min = config[config[a].GetString()]["min"].GetInt();
-					auto num1 = min + (int)max * rand() / (RAND_MAX + 1);
+					int max = config[m.name.GetString()]["max"].GetInt();
+					int min = config[m.name.GetString()]["min"].GetInt();
+					auto num1 = rand() % (max - min + 1) + min;
 					Money::createTrans(0, pl.getXuid(), num1);
-					pl.sendText(u8"成功击杀" + mob_name + u8" 获得了" + std::to_string(num1) + config["coinname"].GetString() + u8" 当前余额:" + std::to_string(money + num1), TIP);
+					string zhname = config[m.name.GetString()]["name"].GetString();
+					if (config[m.name.GetString()]["serverallplayers"].GetBool() == false)
+					{
+						pl.sendText(u8"§6成功击杀§d " + zhname + u8" §6获得了§e" + std::to_string(num1) + config["coinname"].GetString() + u8" §6当前余额:§b" + std::to_string(money + num1)  + config["coinname"].GetString(), TIP);
+					}
+					else
+					{
+						BDX::runcmdEx("title @a subtitle §6获得§e" + std::to_string(num1) + config["coinname"].GetString());
+						BDX::runcmdEx("title @a title §6成功击杀 §c" + zhname);
+						pl.sendText(u8"§6成功击杀§d " + zhname + u8" §6获得了§e" + std::to_string(num1)  + config["coinname"].GetString() + u8" §6当前余额:§b" + std::to_string(money + num1) + config["coinname"].GetString(), TIP);
+					}
 				}
 			}
-		}
-		original(_this, a2);
-			
+		original(_this, a2);			
 }
 
+
+#pragma region CMDENUM
+enum class huntercmd :int {
+	reload = 1
+};
+#pragma endregion 
+
+
+#pragma region cmd
+bool reconfig(CommandOrigin const& ori, CommandOutput& outp, MyEnum<huntercmd> op) {
+	switch (op)
+	{
+	case huntercmd::reload: {
+		std::cout << "[Hunter] reload success" << endl;
+		outp.addMessage("[Hunter] reload success");
+		loadconfig();
+		break;
+	}
+	}
+}
+
+bool oncmd_hunter(CommandOrigin const& ori, CommandOutput& outp, MyEnum<huntercmd> op) {
+	return reconfig(ori, outp, op);
+}
+#pragma endregion
+
+void entry() {
+	loadconfig();
+	addListener([](RegisterCommandEvent&) {
+		CEnum<huntercmd> _1("Huntercmd", { "reload" });
+		MakeCommand("hunter", "hunter menu", 1);
+		CmdOverload(hunter, oncmd_hunter, "op");
+		});
+	cout << "[BDXHunter] BDXHunter Loaded, By DreamGuXiang, Build Date [" << __TIMESTAMP__ << u8"] @FineServer丨iFine " << endl;
+}

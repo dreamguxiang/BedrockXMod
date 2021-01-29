@@ -8,7 +8,11 @@
 #define PCH_H
 
 // 添加要在此处预编译的标头
-#include <iostream>
 #include <lbpch.h>
+#include <api/MC.h>
+#include <api/types/types.h>
+#include <api/types/helper.h>
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
 
 #endif //PCH_H
