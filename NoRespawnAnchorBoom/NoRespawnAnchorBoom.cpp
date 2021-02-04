@@ -1,16 +1,5 @@
 #include "pch.h"
 #include <lbpch.h>
-#include <stl\KVDB.h>
-#include <mcapi/Player.h>
-#include <stl\varint.h>
-#include <api\types\helper.h>
-#include <api\command\commands.h>
-#include <mcapi/Core.h>
-#include <mcapi/Actor.h>
-#include <mcapi/Level.h>
-#include <mcapi/BlockSource.h>
-#include <mcapi/core.h>
-#include <mcapi/BlockSource.h>
 
 void entry()
 {
@@ -18,10 +7,7 @@ void entry()
 }
 
 using namespace std;
-THook(bool, "?trySetSpawn@RespawnAnchorBlock@@CA_NAEAVPlayer@@AEBVBlockPos@@AEAVBlockSource@@AEAVLevel@@@Z",
-    Player* pl, BlockPos* bpos) {
-    if (pl->getDimensionId() != 1) {
-        return false;
-    }
-    return original(pl, bpos);
+THook(void, "?explode@RespawnAnchorBlock@@CAXAEAVPlayer@@AEBVBlockPos@@AEAVBlockSource@@AEAVLevel@@@Z",
+    Player* a1,  BlockPos* a2,  BlockSource* a3,  Level* a4) {
+    return;
 }

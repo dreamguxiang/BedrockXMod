@@ -1,7 +1,6 @@
 #include <lbpch.h>
 #include <iostream>
-#include <iostream>
-#include <lbpch.h>
+
 
 #include "pch.h"
 #include <bdxmoney.h>
@@ -93,12 +92,8 @@ void loadconfig() {
 
 THook(void, "?die@Mob@@UEAAXAEBVActorDamageSource@@@Z", Mob* _this, ActorDamageSource* a2) {
 	    string Mob_name = _this->getNameTag();
-	    string Mob_type_name = SymCommandUtils::getActorName(_this);
 		string Mob_name2 = SymCall("?EntityTypeToString@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4ActorType@@W4ActorTypeNamespaceRules@@@Z", string, int, int)(_this->getEntityTypeId(), 1);
-		ActorUniqueID src_id = a2->getEntityUniqueID();
-		Actor* Src = LocateS<ServerLevel>()->fetchEntity(src_id, false);
 		int srccode = dAccess<int>(a2, 8);
-		string cause_n = SymActorDamageSource::lookupCauseName(srccode);
 		if (srccode == 2 || srccode == 3) {
 			Player* spl = _this->getLastHurtByPlayer();
 			auto pl = WPlayer(*(ServerPlayer*)spl);

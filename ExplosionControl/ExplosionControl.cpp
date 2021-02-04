@@ -1,6 +1,16 @@
 #include <lbpch.h>
 #include <iostream>
-
+#include <mcapi/Player.h>
+#include <stl\varint.h>
+#include <api\types\helper.h>
+#include <api\command\commands.h>
+#include <mcapi/Core.h>
+#include <mcapi/Actor.h>
+#include <mcapi/Level.h>
+#include <mcapi/BlockSource.h>
+#include <mcapi/core.h>
+#include <mcapi/BlockSource.h>
+#include <api/gui/gui.h>
 #include "pch.h"
 #include <api\command\commands.h>
 #include "rapidjson/rapidjson.h"
@@ -78,6 +88,7 @@ THook(void, "?explode@Level@@QEAAXAEAVBlockSource@@PEAVActor@@AEBVVec3@@M_N3M3@Z
 		}
 	return original(_this, a2, a3, a4, a5, a6, a7, a8, a9);
 }
+
 
 #pragma region CMDENUM
 enum class expccmd :int {
